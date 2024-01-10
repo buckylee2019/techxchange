@@ -1,9 +1,8 @@
-# GenAI_Incubation_watsonx 中文
+# watsonx techXchange Hands On Lab
 
-Github for IBM Watsonx Incubation Program. 
+Github for Taiwan TechXchange. 
 
 
-<img width="1251" alt="Agenda for incubation" src="https://github.com/buckylee2019/watsonx_incubation_tw/blob/main/images/agenda.png">
 
 ## 如何找到Project ID
 <img width="1251" alt="Agenda for incubation" src="https://github.com/buckylee2019/watsonx_incubation_tw/blob/main/lab00_laptop-environment-setup/images/project_id.png?raw=true">
