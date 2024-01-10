@@ -9,22 +9,17 @@ from ibm_watson_machine_learning.foundation_models import Model
 from ibm_watson_machine_learning.metanames import GenTextParamsMetaNames as GenParams
 from ibm_watson_machine_learning.foundation_models.utils.enums import ModelTypes
 from langchain.callbacks import StdOutCallbackHandler
-from langchain.chains.question_answering import load_qa_chain
 from langchain.document_loaders import PyPDFLoader
 
 from langchain import PromptTemplate
 from langchain.chains import RetrievalQAWithSourcesChain
-from langchain.embeddings import (HuggingFaceHubEmbeddings,
-                                  HuggingFaceInstructEmbeddings)
-from typing import Literal, Optional, Any
+
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.vectorstores import FAISS, Chroma
-from PIL import Image
-from sentence_transformers import SentenceTransformer
+from langchain.vectorstores import  Chroma
 import chromadb
 from langchain.embeddings import HuggingFaceEmbeddings
-import numpy as np
 import pathlib
+
 # Most GENAI logs are at Debug level.
 logging.basicConfig(level=os.environ.get("LOGLEVEL", "DEBUG"))
 
@@ -54,10 +49,10 @@ else:
         "apikey": api_key 
     }
 
-pathlib.Path(__file__).parent.resolve()
+
 GEN_API_KEY = os.getenv("GENAI_KEY", None)
 INDEX_NAME = os.path.join(pathlib.Path(__file__).parent.resolve(),'VectorDB')
-collection_name = "None"
+
 
 system_prompt = """
 You are an AI assistant tasked with providing answers by summarizing related documents. You should follow these rules:
@@ -97,7 +92,7 @@ with st.sidebar:
 uploaded_file = st.file_uploader("Choose a PDF file", accept_multiple_files=False)
 
 @st.cache_data
-def read_pdf(uploaded_file,chunk_size =250,chunk_overlap=20):
+def read_pdf(uploaded_file,chunk_size = 300 ,chunk_overlap=20):
     
     
     bytes_data = uploaded_file.read()
@@ -115,7 +110,7 @@ def read_pdf(uploaded_file,chunk_size =250,chunk_overlap=20):
 
 def read_push_embeddings(docs,collection_name):
     
-    embeddings = HuggingFaceEmbeddings(model_name="paraphrase-multilingual-MiniLM-L12-v2")
+    embeddings = HuggingFaceEmbeddings(model_name="paraphrase-multilingual-mpnet-base-v2")
 
     if docs != "":
         
@@ -174,8 +169,7 @@ def retrieval_qa_pipline(db, llm, system_prompt):
     - The function uses embeddings from the HuggingFace library, either instruction-based or regular.
     - The Chroma class is used to load a vector store containing pre-computed embeddings.
     - The retriever fetches relevant documents or data based on a query.
-    - The prompt and memory, obtained from the `get_prompt_template` function, might be used in the QA system.
-    - The model is loaded onto the specified device using its ID and basename.
+    - The prompt obtained from the `get_prompt_template` function, might be used in the QA system.
     - The QA system retrieves relevant documents using the retriever and then answers questions based on those documents.
     """
 
@@ -205,7 +199,7 @@ if user_question := st.text_input(
     if uploaded_file:
         docs = read_pdf(uploaded_file)
         collection_name = uploaded_file.name.split(".")[-2]
-    print(collection_name)
+    
     db = read_push_embeddings(docs,collection_name)
     
     params = {

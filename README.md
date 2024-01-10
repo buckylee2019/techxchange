@@ -1,4 +1,4 @@
-# watsonx techXchange Hands On Lab
+# watsonx TechXchange Hands On Lab
 
 Github for Taiwan TechXchange. 
 
